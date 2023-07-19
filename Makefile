@@ -12,7 +12,7 @@ BIN = bin
 VERSION = 0.1.0
 COMMIT_HASH = $(git rev-parse --short HEAD)
 BUILD_TIMESTAMP = $(date '+%Y-%m-%dT%H:%M:%S')
-ARGS = new
+ARGS = post
 
 # Valida si ciertos programas se encuentran instalados en el sistema
 validate:
@@ -23,7 +23,7 @@ help: # \tMuestra la ayuda de las diferentes tareas
 	@echo
 	@grep -E '^[a-zA-Z0-9 -]+:.*#'  Makefile | sort | while read -r l; do printf "\033[1;32m  $$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2 -d'#')\n"; done
 
-run: generate # \t\tLa tarea 'run' ejecutará la aplicación desde el archivo MAIN.
+run: # \t\tLa tarea 'run' ejecutará la aplicación desde el archivo MAIN.
 	@go run $(MAIN) $(ARGS)
 
 build: generate # \tLa tarea 'build' Compila la aplicación y genera un binario en ./$(BIN)
