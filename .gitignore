@@ -39,3 +39,5 @@ tags
 # End of https://www.toptal.com/developers/gitignore/api/linux,vim
 # EXTRA
 __*
+res
+gql.json
