@@ -1,35 +1,60 @@
-# Nombre del proyecto
-NAME = gomposer
+TAGLINE := "Simple aplicación CLI para la gestión básica de bases de datos"
+
+GREEN  := $(shell tput -Txterm setaf 2)
+YELLOW := $(shell tput -Txterm setaf 3)
+WHITE  := $(shell tput -Txterm setaf 7)
+RED    := $(shell tput -Txterm setaf 1)
+RESET  := $(shell tput -Txterm sgr0)
+
 # Nombre del binario
-BINNAME = gps
-# We can use such syntax to get main.go and other root Go files.
-GO_FILES = $(wildcard *.go)
-# Working Directory
-WD = $(pwd)
-# Otros
-MAIN = cmd/gomposer/main.go
-BIN = bin
-VERSION = 0.1.0
-COMMIT_HASH = $(git rev-parse --short HEAD)
-BUILD_TIMESTAMP = $(date '+%Y-%m-%dT%H:%M:%S')
-ARGS = post
+BINNAME = gql
+# Ubicación del archivo main
+MAIN = cmd/gql/main.go
+# Argumentos de la línea de comandos
+ARGS = -k select -l
 
-# Valida si ciertos programas se encuentran instalados en el sistema
+VERSION := 0.1.0
+COMMIT_HASH := $(shell git rev-parse --short HEAD)
+BUILD_TIMESTAMP := $(shell date '+%Y-%m-%dT%H:%M:%S')
+
+TARGET_MAX_CHAR_NUM := 20
+
+.DEFAULT_GOAL := help
+.PHONY: help build validate run-go run-bin
+
+
+
+## Valida si los programas obligatorios se encuentran instalados en el sistema
 validate:
-	@command -v reflex >/dev/null 2>&1 || { echo "Se requiere el programa 'reflex' pero no está instalado. Abortando." >&2; exit 1; }
+	@command -v go >/dev/null 2>&1 || { echo "${RED}Requiero el programa 'go' pero no está instalado. Abortando.${RESET}" >&2; exit 1; }
 
-help: # \tMuestra la ayuda de las diferentes tareas
-	@echo "Tareas del proyecto $(NAME):"
-	@echo
-	@grep -E '^[a-zA-Z0-9 -]+:.*#'  Makefile | sort | while read -r l; do printf "\033[1;32m  $$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2 -d'#')\n"; done
+## Muestra este mensaje de ayuda
+help:
+	@echo ${TAGLINE}
+	@echo ''
+	@echo 'Modo de uso:'
+	@echo '  ${YELLOW}make${RESET} ${GREEN}<target>${RESET}'
+	@echo ''
+	@echo 'Targets:'
+	@awk '/^[a-zA-Z\-_0-9]+:/ { \
+		helpMessage = match(lastLine, /^## (.*)/); \
+		if (helpMessage) { \
+			helpCommand = substr($$1, 0, index($$1, ":")-1); \
+			helpMessage = substr(lastLine, RSTART + 3, RLENGTH); \
+			printf "  ${YELLOW}%-$(TARGET_MAX_CHAR_NUM)s${RESET} ${GREEN}%s${RESET}\n", helpCommand, helpMessage; \
+		} \
+	} \
+	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
-run: # \t\tLa tarea 'run' ejecutará la aplicación desde el archivo MAIN.
+## Compila la aplicación y genera un binario en ./dist
+build: validate
+	@mkdir -p ./dist
+	go build -ldflags="-X main.Version='$(VERSION)' -X main.CommitHash='$(COMMIT_HASH)' -X main.BuildTimestamp='$(BUILD_TIMESTAMP)'" -o ./dist/$(BINNAME) $(MAIN)
+
+## Inicia la aplicación desde el código fuente
+run-go: validate
 	@go run $(MAIN) $(ARGS)
 
-build: generate # \tLa tarea 'build' Compila la aplicación y genera un binario en ./$(BIN)
-	@mkdir -p ./$(BIN)
-	@go build -ldflags="-X main.Version='$(VERSION) ($(COMMIT_HASH) $(BUILD_TIMESTAMP))'" -o $(BIN)/$(BINNAME) $(MAIN)
-
-# .PHONY is used for reserving tasks words
-.PHONY:
-
+## Ejecuta el binario generado
+run-bin: build
+	@./dist/$(BINNAME) $(ARGS)
