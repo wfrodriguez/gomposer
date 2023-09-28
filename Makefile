@@ -7,11 +7,11 @@ RED    := $(shell tput -Txterm setaf 1)
 RESET  := $(shell tput -Txterm sgr0)
 
 # Nombre del binario
-BINNAME = gql
+BINNAME = gomposer
 # Ubicación del archivo main
-MAIN = cmd/gql/main.go
+MAIN = cmd/gomposer/main.go
 # Argumentos de la línea de comandos
-ARGS = -k select -l
+ARGS = index
 
 VERSION := 0.1.0
 COMMIT_HASH := $(shell git rev-parse --short HEAD)
@@ -53,6 +53,7 @@ build: validate
 
 ## Inicia la aplicación desde el código fuente
 run-go: validate
+	@rm -f /tmp/test.db
 	@go run $(MAIN) $(ARGS)
 
 ## Ejecuta el binario generado
