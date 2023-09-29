@@ -2,6 +2,7 @@ package data
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/wfrodriguez/gomposer/cfg"
 	"github.com/wfrodriguez/mimir/util"
@@ -54,10 +55,41 @@ func GetTags(db *sql.DB) ([]string, error) {
 	return tags, nil
 }
 
+func GetPosts(db *sql.DB) ([]SPost, error) {
+	rows, err := db.Query(
+		"select p.title, p.slug, iif(p.desc = '', '-Sin descripción-', p.desc) desc, strftime('%Y-%m-%d', p.date, " +
+			"'unixepoch') as fecha from post p order by p.date desc",
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var posts []SPost
+	for rows.Next() {
+		title := ""
+		slug := ""
+		date := ""
+		desc := ""
+		err = rows.Scan(&title, &slug, &desc, &date)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, SPost{
+			"title": title,
+			"slug":  slug,
+			"date":  date,
+			"desc":  desc,
+		})
+	}
+
+	return posts, nil
+}
+
 func GetPostsByTag(db *sql.DB, tag string) ([]SPost, error) {
 	rows, err := db.Query(
-		"select p.title, p.slug, iif(p.desc = '', '-Sin descripción-', p.desc) desc, strftime('%Y-%m-%d', p.date) as pdate "+
-			"from post p, post_tag pt where pt.post = p.id and pt.tag = ? order by p.date desc",
+		"select p.title, p.slug, iif(p.desc = '', '-Sin descripción-', p.desc) desc, "+
+			"strftime('%Y-%m-%d', p.date, 'unixepoch') as pdate from post p, post_tag pt where pt.post = p.id and "+
+			"pt.tag = ? order by p.date desc",
 		tag,
 	)
 	if err != nil {
@@ -88,6 +120,9 @@ func GetPostsByTag(db *sql.DB, tag string) ([]SPost, error) {
 
 func SavePost(db *sql.DB, title, slug, desc string, date int64, tags []string) error {
 	id := 0
+	if date == 0 {
+		date = time.Now().Unix()
+	}
 	err := db.QueryRow(
 		"insert into post(title, slug, date, desc) values(?, ?, ?, ?) returning id",
 		title,
