@@ -18,6 +18,10 @@ import (
 )
 
 type ymlMap = map[string]any
+type dtag struct {
+	Tag  string
+	Slug string
+}
 
 var monthMap = map[string]string{
 	"Enero":      "01",
@@ -45,13 +49,15 @@ func init() {
 
 func convertDate(date string) int64 {
 	if reDateValid.MatchString(date) {
+		// fmt.Print(" ", date, " ")
 		for k, v := range monthMap {
 			date = strings.ReplaceAll(date, k, v)
 		}
-		t, err := time.Parse("01 02 2006", date)
+		t, err := time.Parse("02 01 2006", date)
 		if err != nil {
 			panic(err) // TODO: handle error
 		}
+		// fmt.Println("->", t.Format("2006-01-02"), "")
 
 		return t.Unix()
 	}
@@ -71,7 +77,16 @@ func IndexProject(projectDir string) {
 		panic(err) // TODO: handle error
 	}
 
-	files, err := fs.FindFileByExt(projectDir, fs.Markdown)
+	// fmt.Println("Project:", projectDir)
+
+	// Generar Tags
+	buildTags(projectDir, db)
+	// Generar listado de posts
+	buildPosts(projectDir, db)
+}
+
+func buildTags(projectDir string, db *sql.DB) {
+	files, err := fs.FindFileByExt(filepath.Join(projectDir, "post"), fs.Markdown)
 	if err != nil {
 		panic(err) // TODO: handle error
 	}
@@ -84,8 +99,6 @@ func IndexProject(projectDir string) {
 		}
 		name := fileStat.Name()
 		slug, _ := strings.CutSuffix(name, filepath.Ext(name))
-		// fmt.Println("  - File Name:", name) // Base name of the file
-		// fmt.Println("  - File slug:", slug) // Slug name of the files
 		var b []byte
 		b, err = extractHeader(file)
 		if err != nil {
@@ -136,14 +149,34 @@ func IndexProject(projectDir string) {
 	generateTags(projectDir, db)
 }
 
+func buildPosts(projectDir string, db *sql.DB) {
+	projectDir = filepath.Join(projectDir, "build")
+	posts, err := data.GetPosts(db)
+	var tmp []byte
+	if err != nil {
+		panic(err) // TODO: handle error
+	}
+	data := map[string]any{
+		"posts": posts,
+	}
+	tmp, err = ui.Render(tpl.AllPosts, data)
+	file := filepath.Join(projectDir, "posts.md")
+	err = os.WriteFile(file, tmp, 0666)
+	if err != nil {
+		panic(err) // TODO: handle error
+	}
+	fmt.Println(" ", file)
+}
+
 func generateTags(projectDir string, db *sql.DB) {
+	dataTags := make([]dtag, 0)
 	tags, err := data.GetTags(db)
 	if err != nil {
 		panic(err) // TODO: handle error
 	}
 	tagDir := filepath.Join(projectDir, "tag")
 	for _, tag := range tags {
-		fmt.Println(" ", tag)
+		fmt.Print(" ", tag, " ")
 		posts, err := data.GetPostsByTag(db, tag)
 		if err != nil {
 			panic(err) // TODO: handle error
@@ -152,16 +185,35 @@ func generateTags(projectDir string, db *sql.DB) {
 			"tag":   tag,
 			"posts": posts,
 		}
-		tpl, err := ui.Render(tpl.TplTag, datos)
+		tmp, err := ui.Render(tpl.TplTag, datos)
 		if err != nil {
 			panic(err) // TODO: handle error
 		}
 
-		err = os.WriteFile(filepath.Join(tagDir, fmt.Sprintf("%s.md", text.Slugify(tag))), tpl, 0666)
+		slug := text.Slugify(tag)
+		dataTags = append(dataTags, dtag{Tag: tag, Slug: slug})
+		err = os.WriteFile(filepath.Join(tagDir, fmt.Sprintf("%s.md", slug)), tmp, 0666)
 		if err != nil {
 			panic(err) // TODO: handle error
 		}
 	}
+	fmt.Println()
+
+	datos := map[string]any{
+		"tags": dataTags,
+	}
+	tmp, err := ui.Render(tpl.AllTags, datos)
+	if err != nil {
+		panic(err) // TODO: handle error
+	}
+
+	projectDir = filepath.Join(projectDir, "build")
+	file := filepath.Join(projectDir, "tags.md")
+	err = os.WriteFile(file, tmp, 0666)
+	if err != nil {
+		panic(err) // TODO: handle error
+	}
+	fmt.Println(" ", file)
 }
 
 func extractHeader(path string) ([]byte, error) {
