@@ -17,8 +17,8 @@ var (
 
 func NewMemDB() (*sql.DB, error) {
 	var err error
-	// db, err = sql.Open("sqlite", ":memory:")
-	db, err = sql.Open("sqlite", "/tmp/test.db")
+	db, err = sql.Open("sqlite", ":memory:")
+	// db, err = sql.Open("sqlite", "/tmp/test.db")
 	if err != nil {
 		return nil, err
 	}
