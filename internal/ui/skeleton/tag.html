@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="$lang$" xml:lang="$lang$">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="gomposer" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+        $for(author)$
+        <meta name="author" content="$author$" />
+        $endfor$
+        $if(date)$
+        <meta name="dcterms.date" content="$date$" />
+        $endif$
+        $if(keywords)$
+        <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />
+        $endif$
+        $if(description)$
+        <meta name="description" content="$description$" />
+        $endif$
+        <title>$if(title)$$title$$else$Gomposer$endif$</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎉</text></svg>">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/skel.css">
+        <link rel="stylesheet" href="/static/css/style.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Roboto:ital,wght@0,100;0,400;0,700;1,100;1,400;1,700&display=swap" rel="stylesheet">
+        $for(header-includes)$
+            $header-includes$
+        $endfor$
+    </head>
+    <body>
+        <nav>
+            <a href="/">🏠 Inicio</a> |
+            <a href="/post">📚 Posts</a> |
+            <a href="/tag">🔖 Tags</a> |
+            <a href="/page/contact">📝 Contact</a>
+        </nav>
+        <main>
+            <div class="row">
+                <div class="twelve columns">
+                $if(title)$
+                <!-- Start header -->
+                <header id="title-block-header">
+                    <h1 class="title">$title$</h1>
+                </header>
+                <!-- End header -->
+                $endif$
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="twelve columns">
+                    <!-- Start Body -->
+                    <article class="post">
+                        $body$
+                    </article>
+                    <!-- End Body -->
+                </div>
+            </div>
+
+            <div class="row t3">
+                <div class="twelve columns">
+                    <!-- Start Footer -->
+                    <footer>
+                        Creado por Gomposer - Walter Rodríguez
+                    </footer>
+                    <!-- End Footer -->
+                </div>
+            </div>
+
+        </main>
+        <!-- <script src="/static/js/custom.js"></script> -->
+    </body>
+</html>
