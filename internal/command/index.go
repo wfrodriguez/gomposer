@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/wfrodriguez/gomposer/cfg"
 	"github.com/wfrodriguez/gomposer/internal/data"
 	"github.com/wfrodriguez/gomposer/internal/tpl"
 	"github.com/wfrodriguez/gomposer/internal/ui"
@@ -150,7 +151,7 @@ func buildTags(projectDir string, db *sql.DB) {
 }
 
 func buildPosts(projectDir string, db *sql.DB) {
-	projectDir = filepath.Join(projectDir, "build")
+	projectDir = filepath.Join(projectDir, cfg.BuildDir)
 	posts, err := data.GetPosts(db)
 	var tmp []byte
 	if err != nil {
@@ -174,7 +175,7 @@ func generateTags(projectDir string, db *sql.DB) {
 	if err != nil {
 		panic(err) // TODO: handle error
 	}
-	tagDir := filepath.Join(projectDir, "tag")
+	tagDir := filepath.Join(projectDir, cfg.BuildDir, "tag")
 	for _, tag := range tags {
 		fmt.Print(" ", tag, " ")
 		posts, err := data.GetPostsByTag(db, tag)
@@ -207,7 +208,7 @@ func generateTags(projectDir string, db *sql.DB) {
 		panic(err) // TODO: handle error
 	}
 
-	projectDir = filepath.Join(projectDir, "build")
+	projectDir = filepath.Join(projectDir, cfg.BuildDir)
 	file := filepath.Join(projectDir, "tags.md")
 	err = os.WriteFile(file, tmp, 0666)
 	if err != nil {

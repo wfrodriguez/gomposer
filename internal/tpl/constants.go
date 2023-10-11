@@ -1,6 +1,8 @@
 package tpl
 
-const TplTag = `# Posts para el tag **{{.tag}}**
+const TplTag = `---
+title: Posts para el tag {{ .tag }}
+---
 
 {{ range .posts }}
 <section>
@@ -11,3 +13,25 @@ const TplTag = `# Posts para el tag **{{.tag}}**
 </section>
 {{ end }}
 `
+
+const AllTags = `---
+title: Listado de tags
+---
+
+
+{{ range .tags }}
+-   [{{.Tag}}](/tag/{{.Slug}})
+{{- end }}
+`
+
+const AllPosts = `---
+title: Listado de posts
+---
+
+{{ range .posts }}
+<section>
+<time>{{ .date }}</time>
+[**{{ .title }}**](/post/{{ .slug }})
+*{{.desc}}*
+</section>
+{{ end }}`
