@@ -1,6 +1,8 @@
+github.com/chzyer/logex v1.2.1 h1:XHDu3E6q+gdHgsdTPH6ImJMIp436vR6MPtH8gP05QzM=
 github.com/chzyer/logex v1.2.1/go.mod h1:JLbx6lG2kDbNRFnfkgvh4eRJRPX1QCoOIWomwysCBrQ=
 github.com/chzyer/readline v1.5.1 h1:upd/6fQk4src78LMRzh5vItIt361/o4uq553V8B5sGI=
 github.com/chzyer/readline v1.5.1/go.mod h1:Eh+b79XXUwfKfcPLepksvw2tcLE/Ct21YObkaSkeBlk=
+github.com/chzyer/test v1.0.0 h1:p3BQDXSxOhOG0P9z6/hGnII4LGiEPOYBhs8asl/fC04=
 github.com/chzyer/test v1.0.0/go.mod h1:2JlltgoNkt4TW/z9V/IzDdFaMTM2JPIi26O1pF38GC8=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
 github.com/dustin/go-humanize v1.0.1/go.mod h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto=
@@ -27,8 +29,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=
 github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec/go.mod h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo=
-github.com/wfrodriguez/console v0.0.0-20230919183314-facd9e1939bd h1:sFMpcAAt+FTwgJWNn5Ntw4LvVqO9oOvoCsR62gaZCaA=
-github.com/wfrodriguez/console v0.0.0-20230919183314-facd9e1939bd/go.mod h1:nSSGiRgdx8AwVKLibvpeu8+xpVi+HKufH1gf3uWtPfw=
+github.com/wfrodriguez/console v0.0.0-20230929011706-4a6a69c8cfb8 h1:WeInzKNLYUOa7Fqr53xtIMZQ7JMU56rBDpkt32/OJNM=
+github.com/wfrodriguez/console v0.0.0-20230929011706-4a6a69c8cfb8/go.mod h1:nSSGiRgdx8AwVKLibvpeu8+xpVi+HKufH1gf3uWtPfw=
 github.com/wfrodriguez/mimir v0.0.0-20230914011324-6a4323965186 h1:1oQjws2d2aCyRachtJyl07j/jrieHq70fw7Y2RLMO18=
 github.com/wfrodriguez/mimir v0.0.0-20230914011324-6a4323965186/go.mod h1:zMYGgYZO+w8RglXiEaDAMYUacB9gkoqUHJAgrmf6vh4=
 golang.org/x/mod v0.12.0 h1:rmsUpXtvNzj340zd98LZ4KntptpfRHwpFOHG188oHXc=
